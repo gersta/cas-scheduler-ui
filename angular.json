@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "cas-scheduler-ui"
+    }
+  },
+  "defaultProject": "cas-scheduler-ui",
+  "cli": {
+    "analytics": false
+  }
 }
