@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LectureListComponent } from './lecture-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LectureService } from './lecture.service';
+import { AgGridModule } from 'ag-grid-angular';
 
 
 
@@ -10,7 +11,8 @@ import { LectureService } from './lecture.service';
   declarations: [LectureListComponent],
   imports: [
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    AgGridModule.withComponents()
   ],
   exports: [
     LectureListComponent

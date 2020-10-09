@@ -1,3 +1,10 @@
-<ng-container *ngFor="let lecture of lectures">
-  {{ lecture | json }}
-</ng-container>
+<small>Number of lectures: {{ lectures.length }}</small>
+
+<ag-grid-angular
+  style="height: 100vh;"
+  class="ag-theme-alpine lectures-list"
+  [rowData]="lectures"
+  [columnDefs]="columns"
+  (gridReady)="onGridReady($event)"
+>
+</ag-grid-angular>
