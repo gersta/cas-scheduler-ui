@@ -15,7 +15,7 @@ export class LectureListComponent implements OnInit {
 
   // custom definitions
 
-  lectures: Lecture[];
+  lectures$: Observable<Lecture[]>;
 
 
   // ag grid definitions
@@ -25,9 +25,12 @@ export class LectureListComponent implements OnInit {
 
   columns = [
     { field: 'name', sortable: true, filter: true, checkboxSelection: true },
-    { field: 'start', sortable: true, filter: true,  },
-    { field: 'end', sortable: true, filter: true,  },
-    { field: 'location', sortable: true, filter: true,  },
+    { field: 'firstBlockStart', sortable: true, filter: true,  },
+    { field: 'firstBlockEnd', sortable: true, filter: true,  },
+    { field: 'firstBlockLocation', sortable: true, filter: true,  },
+    { field: 'secondBlockStart', sortable: true, filter: true,  },
+    { field: 'secondBlockEnd', sortable: true, filter: true,  },
+    { field: 'firstBlockLocation', sortable: true, filter: true,  },
   ];
 
   // constructor
@@ -35,18 +38,7 @@ export class LectureListComponent implements OnInit {
   constructor(private lectureService: LectureService) { }
 
   ngOnInit(): void {
-    this.lectureService.getAll().subscribe(documents => {
-      this.lectures = documents.map( (document, index) => {
-        let lecture: Lecture = {
-          name: document.fields.name.stringValue,
-          start: document.fields.start.stringValue,
-          end: document.fields.end.stringValue,
-          location: document.fields.location.stringValue
-        }
-
-        return lecture;
-      })
-    });
+    this.lectures$ = this.lectureService.getAll();
   }
 
   onGridReady(params: GridReadyEvent) {
