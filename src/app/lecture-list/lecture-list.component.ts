@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AgGridColumn } from 'ag-grid-angular';
-import { ColumnApi, GridApi, GridParams, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, ColumnApi, GridApi, GridOptions, GridParams, GridReadyEvent } from 'ag-grid-community';
 import { Observable } from 'rxjs';
 import { Lecture } from '../shared/models/Lecture';
 import { LectureService } from './lecture.service';
@@ -23,15 +23,22 @@ export class LectureListComponent implements OnInit {
   gridApi: GridApi;
   gridColumnApi: ColumnApi;
 
-  columns = [
-    { field: 'name', sortable: true, filter: true, checkboxSelection: true },
-    { field: 'firstBlockStart', sortable: true, filter: true,  },
-    { field: 'firstBlockEnd', sortable: true, filter: true,  },
-    { field: 'firstBlockLocation', sortable: true, filter: true,  },
-    { field: 'secondBlockStart', sortable: true, filter: true,  },
-    { field: 'secondBlockEnd', sortable: true, filter: true,  },
-    { field: 'firstBlockLocation', sortable: true, filter: true,  },
+  columns: ColDef[] = [
+    { field: 'name' },
+    { field: 'firstBlockStart' },
+    { field: 'firstBlockEnd' },
+    { field: 'firstBlockLocation' },
+    { field: 'secondBlockStart' },
+    { field: 'secondBlockEnd' },
+    { field: 'firstBlockLocation' },
   ];
+
+  // define custom properties of all columns centrally in this object
+  defaultColumnDefinitions: ColDef = {
+    sortable: true,
+    filter: true,
+    resizable: true
+  }
 
   // constructor
 

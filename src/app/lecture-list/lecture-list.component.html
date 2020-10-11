@@ -3,6 +3,8 @@
   class="ag-theme-alpine lectures-list"
   [rowData]="lectures$ | async"
   [columnDefs]="columns"
+  [defaultColDef]="defaultColumnDefinitions"
+  [rowMultiSelectWithClick]="true"
   rowSelection="multiple"
   (gridReady)="onGridReady($event)"
 >
