@@ -1,4 +1,4 @@
-import { BlockDto } from './BlockDto';
+import { BlockDto } from './block.dto';
 
 export interface LectureDto {
 

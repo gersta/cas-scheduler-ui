@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { Lecture } from '../shared/models/Lecture';
-import { LectureDto } from '../shared/models/LectureDto';
-import { LectureService } from './lecture.service';
+import { ColDef, ColumnApi, GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { FileTypes } from '../shared/models/file-types.enum';
+import { Lecture } from '../shared/models/lecture';
+import { LectureDto } from '../shared/models/lecture.dto';
+import { DownloadService } from '../shared/services/download.service';
+import { LectureService } from '../shared/services/lecture.service';
 
 @Component({
   selector: 'app-lecture-list',
@@ -14,6 +16,8 @@ export class LectureListComponent implements OnInit {
   // custom definitions
 
   lectures: Lecture[];
+
+  isDownloadVisible: boolean = false;
 
 
   // ag grid definitions
@@ -40,7 +44,7 @@ export class LectureListComponent implements OnInit {
 
   // constructor
 
-  constructor(private lectureService: LectureService) { }
+  constructor(private lectureService: LectureService, private downloadService: DownloadService) { }
 
   ngOnInit(): void {
     this.lectureService.getAll().subscribe(lectures => {
@@ -51,14 +55,18 @@ export class LectureListComponent implements OnInit {
           firstBlockStart: lecture.blocks[0].blockStart,
           firstBlockEnd: lecture.blocks[0].blockEnd,
           firstBlockLocation: lecture.blocks[0].location,
+          firstBlockFilename: lecture.blocks[0].filename,
           secondBlockStart: lecture.blocks[1].blockStart,
           secondBlockEnd: lecture.blocks[1].blockEnd,
           secondBlockLocation: lecture.blocks[1].location,
+          secondBlockFilename: lecture.blocks[1].filename
         } as Lecture;
       })
     });
   }
 
+
+  // AG GRID events
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -66,12 +74,32 @@ export class LectureListComponent implements OnInit {
     this.sizeColumnsToFit();
   }
 
+  onSelectionChanged($event: SelectionChangedEvent) {
+    const lectures = this.gridApi.getSelectedRows() as Lecture[];
+
+    this.isDownloadVisible = (lectures.length > 0);
+  }
+
+
+  // AG GRID actions
   sizeColumnsToFit() {
     this.gridApi.sizeColumnsToFit();
   }
 
   resetFilters() {
     this.gridApi.setFilterModel(null);
+  }
+
+  // CUSTOM actions
+  download() {
+    const lectures = this.gridApi.getSelectedRows() as Lecture[];
+
+    lectures.forEach(lecture => {
+      const { firstBlockFilename, secondBlockFilename } = lecture;
+
+      this.downloadService.download(firstBlockFilename, FileTypes.ICS);
+      this.downloadService.download(secondBlockFilename, FileTypes.ICS);
+    });
   }
 
 }

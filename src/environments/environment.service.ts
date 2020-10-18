@@ -15,4 +15,7 @@ export class EnvironmentService implements AbstractEnvironment {
     return environment.apiRoot;
   }
 
+  lectures: string;
+  ics: string;
+
 }

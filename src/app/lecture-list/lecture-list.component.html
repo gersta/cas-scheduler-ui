@@ -1,5 +1,7 @@
 <button (click)="resetFilters()">Reset Filters</button>
 
+<button type="button" *ngIf="isDownloadVisible" (click)="download()">Download</button>
+
 <hr>
 
 <ag-grid-angular
@@ -13,5 +15,6 @@
   [pagination]="true"
   [paginationAutoPageSize]="true"
   (gridReady)="onGridReady($event)"
+  (selectionChanged)="onSelectionChanged($event)"
 >
 </ag-grid-angular>

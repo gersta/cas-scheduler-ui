@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LectureListComponent } from './lecture-list.component';
 import { HttpClientModule } from '@angular/common/http';
-import { LectureService } from './lecture.service';
+import { LectureService } from '../shared/services/lecture.service';
 import { AgGridModule } from 'ag-grid-angular';
 
 
@@ -18,7 +18,6 @@ import { AgGridModule } from 'ag-grid-angular';
     LectureListComponent
   ],
   providers: [
-    LectureService
   ]
 })
 export class LectureListModule { }
