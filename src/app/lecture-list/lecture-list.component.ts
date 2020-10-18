@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AgGridColumn } from 'ag-grid-angular';
-import { ColDef, ColumnApi, GridApi, GridOptions, GridParams, GridReadyEvent } from 'ag-grid-community';
-import { Observable } from 'rxjs';
+import { ColDef, ColumnApi, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { Lecture } from '../shared/models/Lecture';
+import { LectureDto } from '../shared/models/LectureDto';
 import { LectureService } from './lecture.service';
 
 @Component({
@@ -15,22 +13,22 @@ export class LectureListComponent implements OnInit {
 
   // custom definitions
 
-  lectures$: Observable<Lecture[]>;
+  lectures: Lecture[];
 
 
   // ag grid definitions
-
   gridApi: GridApi;
   gridColumnApi: ColumnApi;
 
   columns: ColDef[] = [
+    { field: 'lectureCode' },
     { field: 'name' },
     { field: 'firstBlockStart' },
     { field: 'firstBlockEnd' },
     { field: 'firstBlockLocation' },
     { field: 'secondBlockStart' },
     { field: 'secondBlockEnd' },
-    { field: 'firstBlockLocation' },
+    { field: 'secondBlockLocation' },
   ];
 
   // define custom properties of all columns centrally in this object
@@ -45,7 +43,20 @@ export class LectureListComponent implements OnInit {
   constructor(private lectureService: LectureService) { }
 
   ngOnInit(): void {
-    this.lectures$ = this.lectureService.getAll();
+    this.lectureService.getAll().subscribe(lectures => {
+      this.lectures = lectures.map( (lecture: LectureDto) => {
+        return {
+          lectureCode: lecture.lectureCode,
+          name: lecture.name,
+          firstBlockStart: lecture.blocks[0].blockStart,
+          firstBlockEnd: lecture.blocks[0].blockEnd,
+          firstBlockLocation: lecture.blocks[0].location,
+          secondBlockStart: lecture.blocks[1].blockStart,
+          secondBlockEnd: lecture.blocks[1].blockEnd,
+          secondBlockLocation: lecture.blocks[1].location,
+        } as Lecture;
+      })
+    });
   }
 
   onGridReady(params: GridReadyEvent) {
@@ -57,6 +68,10 @@ export class LectureListComponent implements OnInit {
 
   sizeColumnsToFit() {
     this.gridApi.sizeColumnsToFit();
+  }
+
+  resetFilters() {
+    this.gridApi.setFilterModel(null);
   }
 
 }

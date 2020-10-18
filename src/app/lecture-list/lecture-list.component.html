@@ -1,7 +1,11 @@
+<button (click)="resetFilters()">Reset Filters</button>
+
+<hr>
+
 <ag-grid-angular
   style="height: 100vh;"
   class="ag-theme-alpine lectures-list"
-  [rowData]="lectures$ | async"
+  [rowData]="lectures"
   [columnDefs]="columns"
   [defaultColDef]="defaultColumnDefinitions"
   [rowMultiSelectWithClick]="true"
