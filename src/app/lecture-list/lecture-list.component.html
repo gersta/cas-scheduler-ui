@@ -1,11 +1,13 @@
-<button (click)="resetFilters()">Reset Filters</button>
+<ng-container style="height: 10vh;">
+  <button (click)="resetFilters()">Reset Filters</button>
 
-<button type="button" *ngIf="isDownloadVisible" (click)="download()">Download</button>
+  <button type="button" *ngIf="isDownloadVisible" (click)="download()">Download</button>
+</ng-container>
 
 <hr>
 
 <ag-grid-angular
-  style="height: 100vh;"
+  style="height: 90vh;"
   class="ag-theme-alpine lectures-list"
   [rowData]="lectures"
   [columnDefs]="columns"

@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ColDef, ColumnApi, GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { FileTypes } from '../shared/models/file-types.enum';
@@ -27,11 +28,11 @@ export class LectureListComponent implements OnInit {
   columns: ColDef[] = [
     { field: 'lectureCode' },
     { field: 'name' },
-    { field: 'firstBlockStart' },
-    { field: 'firstBlockEnd' },
+    { field: 'firstBlockStart', filter: false }, // disable filtering for now as view and date model diverge
+    { field: 'firstBlockEnd', filter: false }, // disable filtering for now as view and date model diverge
     { field: 'firstBlockLocation' },
-    { field: 'secondBlockStart' },
-    { field: 'secondBlockEnd' },
+    { field: 'secondBlockStart', filter: false }, // disable filtering for now as view and date model diverge
+    { field: 'secondBlockEnd', filter: false }, // disable filtering for now as view and date model diverge
     { field: 'secondBlockLocation' },
   ];
 
@@ -44,7 +45,7 @@ export class LectureListComponent implements OnInit {
 
   // constructor
 
-  constructor(private lectureService: LectureService, private downloadService: DownloadService) { }
+  constructor(private lectureService: LectureService, private downloadService: DownloadService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.lectureService.getAll().subscribe(lectures => {
@@ -52,12 +53,12 @@ export class LectureListComponent implements OnInit {
         return {
           lectureCode: lecture.lectureCode,
           name: lecture.name,
-          firstBlockStart: lecture.blocks[0].blockStart,
-          firstBlockEnd: lecture.blocks[0].blockEnd,
+          firstBlockStart: this.datePipe.transform(lecture.blocks[0].blockStart, 'fullDate'),
+          firstBlockEnd: this.datePipe.transform(lecture.blocks[0].blockEnd, 'fullDate'),
           firstBlockLocation: lecture.blocks[0].location,
           firstBlockFilename: lecture.blocks[0].filename,
-          secondBlockStart: lecture.blocks[1].blockStart,
-          secondBlockEnd: lecture.blocks[1].blockEnd,
+          secondBlockStart: this.datePipe.transform(lecture.blocks[1].blockStart, 'fullDate'),
+          secondBlockEnd: this.datePipe.transform(lecture.blocks[1].blockEnd, 'fullDate'),
           secondBlockLocation: lecture.blocks[1].location,
           secondBlockFilename: lecture.blocks[1].filename
         } as Lecture;
