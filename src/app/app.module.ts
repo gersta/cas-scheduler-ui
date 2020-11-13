@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AgGridModule } from 'ag-grid-angular';
 import { AppComponent } from './app.component';
 import { LectureListModule } from './lecture-list/lecture-list.module';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { LectureListModule } from './lecture-list/lecture-list.module';
   ],
   imports: [
     BrowserModule,
-    LectureListModule
+    LectureListModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

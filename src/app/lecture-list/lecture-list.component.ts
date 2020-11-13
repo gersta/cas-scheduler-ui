@@ -1,9 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ColDef, ColumnApi, GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
+import { Router } from '@angular/router';
+import { ColDef, ColumnApi, FilterChangedEvent, GridApi, GridReadyEvent, SelectionChangedEvent } from 'ag-grid-community';
 import { FileTypes } from '../shared/models/file-types.enum';
 import { Lecture } from '../shared/models/lecture';
 import { LectureDto } from '../shared/models/lecture.dto';
+import { CalendarService } from '../shared/services/calendar.service';
 import { DownloadService } from '../shared/services/download.service';
 import { LectureService } from '../shared/services/lecture.service';
 
@@ -18,7 +20,8 @@ export class LectureListComponent implements OnInit {
 
   lectures: Lecture[];
 
-  isDownloadVisible: boolean = false;
+  isFilterPresent: boolean = false;
+  isMenuVisible: boolean = false;
 
 
   // ag grid definitions
@@ -43,9 +46,15 @@ export class LectureListComponent implements OnInit {
     resizable: true
   }
 
+
   // constructor
 
-  constructor(private lectureService: LectureService, private downloadService: DownloadService, private datePipe: DatePipe) { }
+  constructor(
+    private lectureService: LectureService,
+    private downloadService: DownloadService,
+    private calendarService: CalendarService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.lectureService.getAll().subscribe(lectures => {
@@ -53,12 +62,12 @@ export class LectureListComponent implements OnInit {
         return {
           lectureCode: lecture.lectureCode,
           name: lecture.name,
-          firstBlockStart: this.datePipe.transform(lecture.blocks[0].blockStart, 'fullDate'),
-          firstBlockEnd: this.datePipe.transform(lecture.blocks[0].blockEnd, 'fullDate'),
+          firstBlockStart: lecture.blocks[0].blockStart, //this.datePipe.transform(lecture.blocks[0].blockStart, 'fullDate'),
+          firstBlockEnd: lecture.blocks[0].blockEnd, //this.datePipe.transform(lecture.blocks[0].blockEnd, 'fullDate'),
           firstBlockLocation: lecture.blocks[0].location,
           firstBlockFilename: lecture.blocks[0].filename,
-          secondBlockStart: this.datePipe.transform(lecture.blocks[1].blockStart, 'fullDate'),
-          secondBlockEnd: this.datePipe.transform(lecture.blocks[1].blockEnd, 'fullDate'),
+          secondBlockStart: lecture.blocks[1].blockStart, //this.datePipe.transform(lecture.blocks[1].blockStart, 'fullDate'),
+          secondBlockEnd: lecture.blocks[1].blockEnd, //this.datePipe.transform(lecture.blocks[1].blockEnd, 'fullDate'),
           secondBlockLocation: lecture.blocks[1].location,
           secondBlockFilename: lecture.blocks[1].filename
         } as Lecture;
@@ -78,7 +87,11 @@ export class LectureListComponent implements OnInit {
   onSelectionChanged($event: SelectionChangedEvent) {
     const lectures = this.gridApi.getSelectedRows() as Lecture[];
 
-    this.isDownloadVisible = (lectures.length > 0);
+    this.isMenuVisible = (lectures.length > 0);
+  }
+
+  onFilterChanged($event: FilterChangedEvent) {
+    this.isFilterPresent = this.gridApi.isAnyFilterPresent();
   }
 
 
@@ -101,6 +114,14 @@ export class LectureListComponent implements OnInit {
       this.downloadService.download(firstBlockFilename, FileTypes.ICS);
       this.downloadService.download(secondBlockFilename, FileTypes.ICS);
     });
+  }
+
+  calendar() {
+    const lectures = this.gridApi.getSelectedRows() as Lecture[];
+
+    this.calendarService.setEvents(lectures);
+
+    this.router.navigate(['calendar'])
   }
 
 }

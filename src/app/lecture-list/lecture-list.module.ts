@@ -4,6 +4,8 @@ import { LectureListComponent } from './lecture-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LectureService } from '../shared/services/lecture.service';
 import { AgGridModule } from 'ag-grid-angular';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { LectureListRoutingModule } from './lecture-list-routing.module';
 
 
 
@@ -12,7 +14,8 @@ import { AgGridModule } from 'ag-grid-angular';
   imports: [
     CommonModule,
     HttpClientModule,
-    AgGridModule.withComponents()
+    AgGridModule.withComponents(),
+    LectureListRoutingModule
   ],
   exports: [
     LectureListComponent

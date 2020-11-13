@@ -1,7 +1,9 @@
 <ng-container style="height: 10vh;">
-  <button (click)="resetFilters()">Reset Filters</button>
+  <button type="button" *ngIf="isFilterPresent" (click)="resetFilters()">Reset Filters</button>
 
-  <button type="button" *ngIf="isDownloadVisible" (click)="download()">Download</button>
+  <button type="button" *ngIf="isMenuVisible" (click)="download()">Download</button>
+
+  <button type="button" *ngIf="isMenuVisible" (click)="calendar()">Calendar</button>
 </ng-container>
 
 <hr>
@@ -18,5 +20,6 @@
   [paginationAutoPageSize]="true"
   (gridReady)="onGridReady($event)"
   (selectionChanged)="onSelectionChanged($event)"
+  (filterChanged)="onFilterChanged($event)"
 >
 </ag-grid-angular>
